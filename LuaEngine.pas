@@ -132,10 +132,10 @@ type
 
     procedure RegisterFunction(const AName: string; const AFunction: TLuaExternalFunction);
 
-    procedure PushGlobVar(const AName: string; const Value: Boolean); overload;
-    procedure PushGlobVar(const AName: string; const Value: Integer); overload;
-    procedure PushGlobVar(const AName: string; const Value: Double); overload;
-    procedure PushGlobVar(const AName: string; const Value: RawByteString); overload;
+    procedure PushGlobalVar(const AName: string; const Value: Boolean); overload;
+    procedure PushGlobalVar(const AName: string; const Value: Integer); overload;
+    procedure PushGlobalVar(const AName: string; const Value: Double); overload;
+    procedure PushGlobalVar(const AName: string; const Value: RawByteString); overload;
 
     procedure RunCode(const ACode: string);
     procedure RunFile(const AFileName: string);
@@ -221,26 +221,26 @@ begin
   end;
 end;
 
-procedure TLuaEngine.PushGlobVar(const AName: string; const Value: Integer);
+procedure TLuaEngine.PushGlobalVar(const AName: string; const Value: Integer);
 begin
   lua_pushinteger(FHandle, Value);
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
 end;
 
-procedure TLuaEngine.PushGlobVar(const AName: string; const Value: Boolean);
+procedure TLuaEngine.PushGlobalVar(const AName: string; const Value: Boolean);
 begin
   lua_pushboolean(FHandle, Value);
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
 end;
 
-procedure TLuaEngine.PushGlobVar(const AName: string;
+procedure TLuaEngine.PushGlobalVar(const AName: string;
   const Value: RawByteString);
 begin
   lua_pushlstring(FHandle, PAnsiChar(Value), Length(Value));
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
 end;
 
-procedure TLuaEngine.PushGlobVar(const AName: string; const Value: Double);
+procedure TLuaEngine.PushGlobalVar(const AName: string; const Value: Double);
 begin
   lua_pushnumber(FHandle, Value);
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
