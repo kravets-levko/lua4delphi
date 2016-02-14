@@ -116,18 +116,23 @@ type
 
   TLuaExternalFunction = reference to procedure(const State: TLuaFunctionContext);
 
+  LuaStdLibrary = (Debug, IO, Math, OS, Packages, Strings, Table);
+  LuaStdLibraries = set of LuaStdLibrary;
+
   TLuaEngine = class(TObject)
   private
     FCallbackList: TObjectList<TObject>;
   protected
     FHandle: TLuaState;
+    FStdLibraries: LuaStdLibraries;
     procedure HandleNeeded; virtual;
     procedure DestroyHandle; virtual;
     function GetHandle: TLuaState;
   public
     property Handle: TLuaState read GetHandle;
 
-    constructor Create; virtual;
+    constructor Create; overload; virtual;
+    constructor Create(const Libraries: LuaStdLibraries); overload; virtual;
     destructor Destroy; override;
 
     procedure RegisterFunction(const AName: string; const AFunction: TLuaExternalFunction);
@@ -141,6 +146,22 @@ type
     procedure RunCode(const ACode: string);
     procedure RunFile(const AFileName: string);
   end;
+
+const
+  LUA_STD_LIBRARIES_DEFAULT: LuaStdLibraries = [
+    LuaStdLibrary.Math,
+    LuaStdLibrary.Strings
+  ];
+
+  LUA_STD_LIBRARIES_ALL: LuaStdLibraries = [
+    LuaStdLibrary.Debug,
+    LuaStdLibrary.IO,
+    LuaStdLibrary.Math,
+    LuaStdLibrary.OS,
+    LuaStdLibrary.Packages,
+    LuaStdLibrary.Strings,
+    LuaStdLibrary.Table
+  ];
 
 implementation
 
@@ -179,10 +200,16 @@ begin
   end;
 end;
 
-constructor TLuaEngine.Create();
+constructor TLuaEngine.Create(const Libraries: LuaStdLibraries);
 begin
   inherited Create;
   FCallbackList := TObjectList<TObject>.Create(true);
+  FStdLibraries := Libraries;
+end;
+
+constructor TLuaEngine.Create;
+begin
+  Create(LUA_STD_LIBRARIES_DEFAULT);
 end;
 
 destructor TLuaEngine.Destroy;
@@ -196,7 +223,7 @@ procedure TLuaEngine.DestroyHandle;
 begin
   if Assigned(FHandle) then
   begin
-    Lua_Close(FHandle);
+    lua_close(FHandle);
     FHandle := nil;
     FCallbackList.Clear;
   end;
@@ -217,8 +244,23 @@ begin
       LoadLuaLib;
 
     // Open Library
-    FHandle := Lua_Open();
+    FHandle := lua_open();
     luaopen_base(FHandle);
+
+    if LuaStdLibrary.Debug in FStdLibraries then
+      luaopen_debug(FHandle);
+    if LuaStdLibrary.IO in FStdLibraries then
+      luaopen_io(FHandle);
+    if LuaStdLibrary.Math in FStdLibraries then
+      luaopen_math(FHandle);
+    if LuaStdLibrary.OS in FStdLibraries then
+      luaopen_os(FHandle);
+    if LuaStdLibrary.Packages in FStdLibraries then
+      luaopen_package(FHandle);
+    if LuaStdLibrary.Strings in FStdLibraries then
+      luaopen_string(FHandle);
+    if LuaStdLibrary.Table in FStdLibraries then
+      luaopen_table(FHandle);
   end;
 end;
 
@@ -252,8 +294,7 @@ begin
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
 end;
 
-procedure TLuaEngine.RegisterFunction(const AName: string;
-  const AFunction: TLuaExternalFunction);
+procedure TLuaEngine.RegisterFunction(const AName: string; const AFunction: TLuaExternalFunction);
 var
   CallBack: TCallBack; // Callback Object
 begin

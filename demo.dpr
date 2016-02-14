@@ -5,7 +5,7 @@ program demo;
 uses
   SysUtils,
   LuaEngine in 'LuaEngine.pas',
-  Lua in 'Lua.pas';
+  LuaLib in 'LuaLib.pas';
 
 procedure hello(const Context: TLuaFunctionContext);
 var
@@ -21,9 +21,9 @@ var lua: TLuaEngine;
 
 begin
   try
-    lua := TLuaEngine.Create;
+    lua := TLuaEngine.Create([LuaStdLibrary.Math]);
     lua.RegisterFunction('hello', hello);
-    lua.RunCode('print("## Lua script started"); print(hello(1, "qwer"));');
+    lua.RunCode('print("## Lua script started"); print(hello(math.pi, "qwer"));');
   except
     on E: Exception do
       Writeln(E.ClassName, ': ', E.Message);

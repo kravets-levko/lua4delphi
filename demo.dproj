@@ -47,7 +47,7 @@
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
 			<DCCReference Include="LuaEngine.pas"/>
-			<DCCReference Include="Lua.pas"/>
+			<DCCReference Include="LuaLib.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
