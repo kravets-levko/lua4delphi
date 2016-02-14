@@ -132,6 +132,11 @@ type
 
     procedure RegisterFunction(const AName: string; const AFunction: TLuaExternalFunction);
 
+    procedure PushGlobVar(const AName: string; const Value: Boolean); overload;
+    procedure PushGlobVar(const AName: string; const Value: Integer); overload;
+    procedure PushGlobVar(const AName: string; const Value: Double); overload;
+    procedure PushGlobVar(const AName: string; const Value: RawByteString); overload;
+
     procedure RunCode(const ACode: string);
     procedure RunFile(const AFileName: string);
   end;
@@ -148,11 +153,11 @@ type
     AEngine: TLuaEngine;
   end;
 
-// This function is called by Lua, it extracts the object by
-// pointer to the objects method by name, which is then called.
+  // This function is called by Lua, it extracts the object by
+  // pointer to the objects method by name, which is then called.
 function LuaCallBack(AState: Lua_State): Integer; cdecl;
 var
-  CallBack: TCallBack;       // The Object stored in the Object Table
+  CallBack: TCallBack; // The Object stored in the Object Table
   Context: TLuaFunctionContext;
 begin
   Result := 0;
@@ -216,7 +221,33 @@ begin
   end;
 end;
 
-procedure TLuaEngine.RegisterFunction(const AName: string; const AFunction: TLuaExternalFunction);
+procedure TLuaEngine.PushGlobVar(const AName: string; const Value: Integer);
+begin
+  lua_pushinteger(FHandle, Value);
+  lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
+end;
+
+procedure TLuaEngine.PushGlobVar(const AName: string; const Value: Boolean);
+begin
+  lua_pushboolean(FHandle, Value);
+  lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
+end;
+
+procedure TLuaEngine.PushGlobVar(const AName: string;
+  const Value: RawByteString);
+begin
+  lua_pushlstring(FHandle, PAnsiChar(Value), Length(Value));
+  lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
+end;
+
+procedure TLuaEngine.PushGlobVar(const AName: string; const Value: Double);
+begin
+  lua_pushnumber(FHandle, Value);
+  lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
+end;
+
+procedure TLuaEngine.RegisterFunction(const AName: string;
+  const AFunction: TLuaExternalFunction);
 var
   CallBack: TCallBack; // Callback Object
 begin
@@ -289,43 +320,43 @@ end;
 procedure TLuaFunctionContext.PushResult(const Value: Integer);
 begin
   SetLength(FResults, Length(FResults) + 1);
-  FResults[High(FREsults)] := TLuaFunctionResult.Create(Value);
+  FResults[High(FResults)] := TLuaFunctionResult.Create(Value);
 end;
 
 procedure TLuaFunctionContext.PushResult(const Value: Boolean);
 begin
   SetLength(FResults, Length(FResults) + 1);
-  FResults[High(FREsults)] := TLuaFunctionResult.Create(Value);
+  FResults[High(FResults)] := TLuaFunctionResult.Create(Value);
 end;
 
 procedure TLuaFunctionContext.PushResult(const Value: Double);
 begin
   SetLength(FResults, Length(FResults) + 1);
-  FResults[High(FREsults)] := TLuaFunctionResult.Create(Value);
+  FResults[High(FResults)] := TLuaFunctionResult.Create(Value);
 end;
 
 procedure TLuaFunctionContext.PushResult(const Value: Pointer);
 begin
   SetLength(FResults, Length(FResults) + 1);
-  FResults[High(FREsults)] := TLuaFunctionResult.Create(Value);
+  FResults[High(FResults)] := TLuaFunctionResult.Create(Value);
 end;
 
 procedure TLuaFunctionContext.PushResult(const Value: TLuaCFunction);
 begin
   SetLength(FResults, Length(FResults) + 1);
-  FResults[High(FREsults)] := TLuaFunctionResult.Create(Value);
+  FResults[High(FResults)] := TLuaFunctionResult.Create(Value);
 end;
 
 procedure TLuaFunctionContext.PushResult(const Value: RawByteString);
 begin
   SetLength(FResults, Length(FResults) + 1);
-  FResults[High(FREsults)] := TLuaFunctionResult.Create(Value);
+  FResults[High(FResults)] := TLuaFunctionResult.Create(Value);
 end;
 
 procedure TLuaFunctionContext.PushResult(const Data: Pointer; const DataSize: Integer);
 begin
   SetLength(FResults, Length(FResults) + 1);
-  FResults[High(FREsults)] := TLuaFunctionResult.Create(Data, DataSize);
+  FResults[High(FResults)] := TLuaFunctionResult.Create(Data, DataSize);
 end;
 
 { TLuaFunctionArgument }
