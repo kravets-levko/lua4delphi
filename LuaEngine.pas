@@ -136,6 +136,7 @@ type
     procedure PushGlobalVar(const AName: string; const Value: Integer); overload;
     procedure PushGlobalVar(const AName: string; const Value: Double); overload;
     procedure PushGlobalVar(const AName: string; const Value: RawByteString); overload;
+    procedure PushGlobalVar(const AName: string;  const Data: Pointer; const DataSize: Integer); overload;
 
     procedure RunCode(const ACode: string);
     procedure RunFile(const AFileName: string);
@@ -233,8 +234,7 @@ begin
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
 end;
 
-procedure TLuaEngine.PushGlobalVar(const AName: string;
-  const Value: RawByteString);
+procedure TLuaEngine.PushGlobalVar(const AName: string; const Value: RawByteString);
 begin
   lua_pushlstring(FHandle, PAnsiChar(Value), Length(Value));
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
@@ -243,6 +243,12 @@ end;
 procedure TLuaEngine.PushGlobalVar(const AName: string; const Value: Double);
 begin
   lua_pushnumber(FHandle, Value);
+  lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
+end;
+
+procedure TLuaEngine.PushGlobalVar(const AName: string; const Data: Pointer; const DataSize: Integer);
+begin
+  lua_pushlstring(FHandle, Data, DataSize);
   lua_setglobal(FHandle, PAnsiChar(AnsiString(AName)));
 end;
 
