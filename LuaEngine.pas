@@ -248,19 +248,40 @@ begin
     luaopen_base(FHandle);
 
     if LuaStdLibrary.Debug in FStdLibraries then
-      luaopen_debug(FHandle);
+    begin
+      lua_pushcfunction(FHandle, luaopen_debug);
+      lua_call(FHandle, 0, 0);
+    end;
     if LuaStdLibrary.IO in FStdLibraries then
-      luaopen_io(FHandle);
+    begin
+      lua_pushcfunction(FHandle, luaopen_io);
+      lua_call(FHandle, 0, 0);
+    end;
     if LuaStdLibrary.Math in FStdLibraries then
-      luaopen_math(FHandle);
+    begin
+      lua_pushcfunction(FHandle, luaopen_math);
+      lua_call(FHandle, 0, 0);
+    end;
     if LuaStdLibrary.OS in FStdLibraries then
-      luaopen_os(FHandle);
+    begin
+      lua_pushcfunction(FHandle, luaopen_os);
+      lua_call(FHandle, 0, 0);
+    end;
     if LuaStdLibrary.Packages in FStdLibraries then
-      luaopen_package(FHandle);
+    begin
+      lua_pushcfunction(FHandle, luaopen_package);
+      lua_call(FHandle, 0, 0);
+    end;
     if LuaStdLibrary.Strings in FStdLibraries then
-      luaopen_string(FHandle);
+    begin
+      lua_pushcfunction(FHandle, luaopen_string);
+      lua_call(FHandle, 0, 0);
+    end;
     if LuaStdLibrary.Table in FStdLibraries then
-      luaopen_table(FHandle);
+    begin
+      lua_pushcfunction(FHandle, luaopen_table);
+      lua_call(FHandle, 0, 0);
+    end;
   end;
 end;
 

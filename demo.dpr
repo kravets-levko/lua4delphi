@@ -21,7 +21,7 @@ var lua: TLuaEngine;
 
 begin
   try
-    lua := TLuaEngine.Create([LuaStdLibrary.Math]);
+    lua := TLuaEngine.Create(LUA_STD_LIBRARIES_ALL);
     lua.RegisterFunction('hello', hello);
     lua.RunCode('print("## Lua script started"); print(hello(math.pi, "qwer"));');
   except
