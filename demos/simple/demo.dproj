@@ -46,8 +46,13 @@
 			<DelphiCompile Include="demo.dpr">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="LuaEngine.pas"/>
-			<DCCReference Include="LuaLib.pas"/>
+			<DCCReference Include="..\..\api\LuaLib.pas"/>
+			<DCCReference Include="..\..\lib\Lua.Core.pas"/>
+			<DCCReference Include="..\..\lib\Lua.GlobalVariable.pas"/>
+			<DCCReference Include="..\..\lib\Lua.Stack.pas"/>
+			<DCCReference Include="..\..\lib\Lua.StandartModules.pas"/>
+			<DCCReference Include="..\..\lib\Lua.Types.pas"/>
+			<DCCReference Include="..\..\lib\Lua.UserFunction.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -166,10 +166,8 @@ const
 
 type
   lua_State = type Pointer;
-  TLuaState = lua_State;
 
   lua_CFunction = function(L: lua_State): Integer; cdecl;
-  TLuaCFunction = lua_CFunction;
 
   (*
   ** functions that read/write blocks when loading/dumping Lua chunks

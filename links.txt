@@ -1,2 +1,0 @@
-http://pgl.yoyo.org/luai/i/_
-http://www.lua.org/pil/25.html
