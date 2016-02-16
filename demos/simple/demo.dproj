@@ -30,8 +30,8 @@
 			<DCC_ExeOutput>.\$(Config)\$(Platform)</DCC_ExeOutput>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1)'!=''">
-			<DCC_ExeOutput>.\bin</DCC_ExeOutput>
-			<DCC_DcuOutput>.\dcu</DCC_DcuOutput>
+			<DCC_ExeOutput>.</DCC_ExeOutput>
+			<DCC_DcuOutput>.</DCC_DcuOutput>
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
 			<DCC_Optimize>false</DCC_Optimize>
 			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>

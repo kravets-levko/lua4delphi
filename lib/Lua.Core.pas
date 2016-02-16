@@ -31,6 +31,16 @@ type
 
 implementation
 
+function LuaAtPanic(AState: TLuaState): Integer; cdecl;
+begin
+  // Lua interpreter is implemented in pure C and does not support
+  // SEH mechanism. So just raise and exception instead of long jump -
+  // it will unwind stack to first registered exception handler and
+  // we'll prewent Lua from exiting out application
+  LuaCheck(LUA_ERRRUN, AState);
+  Result := 0;
+end;
+
 { TLuaCore }
 
 constructor TLuaCore.Create;
@@ -54,7 +64,10 @@ end;
 procedure TLuaCore.HandleNeeded;
 begin
   if not Assigned(FHandle) then
+  begin
     FHandle := lua_open();
+    lua_atpanic(FHandle, LuaAtPanic);
+  end;
 end;
 
 procedure TLuaCore.DestroyHandle;

@@ -34,7 +34,6 @@ begin
       begin
         lua_pushstring(AHandle, 'Greeting from callback');
         lua_pushnumber(AHandle, Pi);
-        raise Exception.Create('Error Message');
         CountOfResults := 2;
       end
     ));
